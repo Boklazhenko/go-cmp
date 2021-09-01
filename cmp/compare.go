@@ -95,6 +95,13 @@ func Equal(x, y interface{}, opts ...Option) bool {
 	return s.result.Equal()
 }
 
+func EqualNonSymmetric(x, y interface{}, opts ...Option) bool {
+	s := newState(opts)
+	s.skipNonSymmetricChecking = true
+	s.compareAny(rootStep(x, y))
+	return s.result.Equal()
+}
+
 // Diff returns a human-readable report of the differences between two values:
 // y - x. It returns an empty string if and only if Equal returns true for the
 // same input values and options.
@@ -178,8 +185,9 @@ type state struct {
 	dynChecker dynChecker
 
 	// These fields, once set by processOption, will not change.
-	exporters []exporter // List of exporters for structs with unexported fields
-	opts      Options    // List of all fundamental and filter options
+	exporters                []exporter // List of exporters for structs with unexported fields
+	opts                     Options    // List of all fundamental and filter options
+	skipNonSymmetricChecking bool
 }
 
 func newState(opts []Option) *state {
@@ -353,6 +361,10 @@ func (s *state) callTTBFunc(f, x, y reflect.Value) bool {
 	// f is symmetric and deterministic.
 	// We run in goroutines so that the race detector (if enabled) can detect
 	// unsafe mutations to the input.
+	if s.skipNonSymmetricChecking {
+		return f.Call([]reflect.Value{x, y})[0].Bool()
+	}
+
 	c := make(chan reflect.Value)
 	go detectRaces(c, f, y, x)
 	got := <-c

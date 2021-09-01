@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"math"
 	"math/rand"
 	"reflect"
@@ -118,6 +119,27 @@ type test struct {
 	wantEqual bool         // Whether any difference is expected
 	wantPanic string       // Sub-string of an expected panic message
 	reason    string       // The reason for the expected outcome
+}
+
+func TestNonSymmetric(t *testing.T) {
+	type Person struct {
+		Name string
+		Age  uint16
+	}
+
+	p1 := &Person{
+		Name: "Tanya",
+		Age:  31,
+	}
+
+	p2 := &Person{
+		Name: "Tanya",
+		Age:  0,
+	}
+
+	log.Println(cmp.EqualNonSymmetric(p1, p2, cmp.FilterValues(func(x, y interface{}) bool {
+		return reflect.ValueOf(x).IsZero()
+	}, cmp.Ignore())))
 }
 
 func TestDiff(t *testing.T) {
