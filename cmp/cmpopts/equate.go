@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/google/go-cmp/cmp"
+	"github.com/Boklazhenko/go-cmp/cmp"
 )
 
 func equateAlways(_, _ interface{}) bool { return true }

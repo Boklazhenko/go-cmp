@@ -9,9 +9,9 @@ import (
 	"net"
 	"time"
 
-	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
-	"github.com/google/go-cmp/cmp/internal/flags"
+	"github.com/Boklazhenko/go-cmp/cmp"
+	"github.com/Boklazhenko/go-cmp/cmp/cmpopts"
+	"github.com/Boklazhenko/go-cmp/cmp/internal/flags"
 )
 
 func init() {

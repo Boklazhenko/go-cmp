@@ -1,4 +1,4 @@
-module github.com/google/go-cmp
+module github.com/Boklazhenko/go-cmp
 
 go 1.8
 
